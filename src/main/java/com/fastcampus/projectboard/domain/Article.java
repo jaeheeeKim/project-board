@@ -8,7 +8,9 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @ToString
@@ -30,6 +32,13 @@ public class Article { // ArticleDTO
 
     @Setter private String hashtag; // 해시태그
 
+    /** 양방향 바인딩 **/
+    // 이 Article에 연동 되어있는 comment는 중복을 허용하지 않고 다 여기 모아서 Collection으로 보겠다!
+    @OrderBy("id")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL) // article 테이블에서 온거라는걸 mapped by로 명시해줌!
+    @ToString.Exclude // ToString을 여기서 끊어줘야함(댓글로부터 글을 참조하는건 정상적인 경우인데, 반대로 글이 댓글리스트를 굳이 뽑을 필요 없으니)
+    private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
+
     // JpaConfig에서 Auditing해주면 아래 어노테이션 사용 가능해짐
     @CreatedDate @Column(nullable = false) private LocalDateTime createdAt; // 작성일시
     @CreatedBy @Column(nullable = false, length = 100) private String createdBy; // 작성자
@@ -42,7 +51,7 @@ public class Article { // ArticleDTO
         this.hashtag = hashtag;
     }
 
-    // 도메인 Article을 생성 할 때 어던 값을 필요로 한다는 것을 가이드하는 부분!
+    // 도메인 Article을 생성 할 때 어떤 값을 필요로 한다는 것을 가이드하는 부분!
     public static Article of(String title, String content, String hashtag) {
         return new Article(title, content, hashtag);
     }
