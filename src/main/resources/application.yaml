@@ -14,20 +14,23 @@ spring:
     password: board
     driver-class-name: com.mysql.cj.jdbc.Driver
 #    driver-class-name: com.mysql.cj.jdbc.Driver
-jpa:
-  defer-datasource-initialization: true
-  hibernate.ddl-auto: create # Entity 만 보고 테이블 데이터를 유추해서 자동으로 ddl문을 만들어줌
-  show-sql: true
-  properties:
-    hibernate.format_sql: true
-    hibernate.default_batch_fetch_size: 100 # N+1 문제 해결하는 방법
-h2.console.enabled: false
-sql.init.mode: always # data.sql 언제 작동 시킬 것인지(embedded는 테스트 환경에서만 작동시킨다)
+  jpa:
+    open-in-view: false
+    hibernate.ddl-auto: create # Entity 만 보고 테이블 데이터를 유추해서 자동으로 ddl문을 만들어줌
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+      hibernate.default_batch_fetch_size: 100 # N+1 문제 해결하는 방법
+      h2.console.enabled: false
+    defer-datasource-initialization: true
+  sql.init.mode: always # data.sql 언제 작동 시킬 것인지(embedded는 테스트 환경에서만 작동시킨다)
+
 
 ---
 
 spring:
-config.activate.on-profile: testdb
+  config.activate.on-profile: testdb
+#  sql.init.mode: never # data.sql 언제 작동 시킬 것인지(embedded는 테스트 환경에서만 작동시킨다)
 #datasource:
 #  url: jdbc:h2:mem:board;mode=mysql
 #  driver-class-name: org.h2.Driver
