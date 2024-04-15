@@ -28,14 +28,14 @@ spring:
 
 ---
 
-spring:
-  config.activate.on-profile: testdb
-#  sql.init.mode: never # data.sql 언제 작동 시킬 것인지(embedded는 테스트 환경에서만 작동시킨다)
-#datasource:
-#  url: jdbc:h2:mem:board;mode=mysql
-#  driver-class-name: org.h2.Driver
-#sql.init.mode: always
-#test.database.replace: none
+# 기본 세팅으로 충분히 동작하기 때문에 아래 세팅이 필요없음!
+#spring:
+#  config.activate.on-profile: testdb
+#  datasource:
+#    url: jdbc:h2:mem:board;mode=mysql
+#    driver-class-name: org.h2.Driver
+#  sql.init.mode: always
+#  test.database.replace: none
 
 server:
   servlet:
