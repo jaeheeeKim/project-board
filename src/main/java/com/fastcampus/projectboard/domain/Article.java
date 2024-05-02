@@ -2,7 +2,13 @@ package com.fastcampus.projectboard.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -16,8 +22,9 @@ import java.util.Set;
         @Index(columnList = "createdAt"),
         @Index(columnList = "createdBy")
 })
+@EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Article extends AuditingFields { // ArticleDTO
+public class Article { // ArticleDTO
     @Id // primarykey
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동으로 오토인크리먼트를 걸어주기 위해서
     private Long id;
@@ -33,6 +40,12 @@ public class Article extends AuditingFields { // ArticleDTO
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL) // article 테이블에서 온거라는걸 mapped by로 명시해줌!
     @ToString.Exclude // ToString을 여기서 끊어줘야함(댓글로부터 글을 참조하는건 정상적인 경우인데, 반대로 글이 댓글리스트를 굳이 뽑을 필요 없으니)
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
+
+    // JpaConfig에서 Auditing해주면 아래 어노테이션 사용 가능해짐
+    @CreatedDate @Column(nullable = false) private LocalDateTime createdAt; // 작성일시
+    @CreatedBy @Column(nullable = false, length = 100) private String createdBy; // 작성자
+    @LastModifiedDate @Column(nullable = false) private LocalDateTime modifiedAt; // 수정일시
+    @LastModifiedBy @Column(nullable = false, length = 100) private String modifiedBy; // 수정자
 
     private Article(String title, String content, String hashtag) {
         this.title = title;
